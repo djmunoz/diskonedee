@@ -5,6 +5,7 @@
 #include <gsl/gsl_linalg.h>
 #include <math.h>
 #include "disk.h"
+#include "global.h"
 
 
 
@@ -86,5 +87,5 @@ void invert_tridiagonal_CN(double alpha, double * b, double * x, int M)
   /* Finally, solve for x in Ux=y */
   x[M-1] = y[M-1] / u[M-1];
   for (int k = M-2; k>-1 ; k--)
-    x[k] = (y[k] + alpha[k] * x[k+1]) / u[k];
+    x[k] = (y[k] + alpha * x[k+1]) / u[k];
 }

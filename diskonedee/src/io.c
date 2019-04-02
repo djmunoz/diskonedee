@@ -4,4 +4,8 @@
 #include "disk.h"
 
 
-void write_to_file(double * W, int M);
+void write_to_file(double * W, int M)
+{
+
+}
+
