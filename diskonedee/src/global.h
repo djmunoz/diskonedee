@@ -23,9 +23,11 @@ extern struct parameters
 
 struct gridvals
 {
-  double radius_val;
-  double alpha_val;
-  double beta_val;
+  double center_val;
+  double side_val;
+  double A_coeff_val;
+  double B_coeff_val;
+  double C_coeff_val;
 };
 
 struct grid
