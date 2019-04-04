@@ -11,7 +11,8 @@
 
 
 
-double *invert_tridiagonal_problem(double *x, double * dd, double * du, double * dl, double * b)
+//double *invert_tridiagonal_problem(double *xx, double * dd, double * du, double * dl, double * b)
+void invert_tridiagonal_problem(double *Q, double * dd, double * du, double * dl, double * b)
 {
   /*
     Simple routine to invert a general tridiagonal matrix A and solve for Ax = b
@@ -26,11 +27,9 @@ double *invert_tridiagonal_problem(double *x, double * dd, double * du, double *
 	   -double *x: (pointer to) vector to be solved for
    */
 
-  x = (double *)malloc((M) *sizeof(double));
+  //xx = (double *)malloc((M) *sizeof(double));
   /* First, determine the L, U matrices */
-  double u[M], l[M];
-  l[0] = 0;
-  u[M-1] = 0;
+  double  u[M], l[M];
 
   /* LU factorization */
   u[0] = dd[0];
@@ -47,13 +46,15 @@ double *invert_tridiagonal_problem(double *x, double * dd, double * du, double *
     y[k] = b[k] - l[k] * y[k-1];
   
   /* Finally, solve for x in Ux=y */
-  x[M-1] = y[M-1] / u[M-1];
+  Q[M-1] = y[M-1] / u[M-1];
   for (int k = M-2; k>-1 ; k--)
     {
-      x[k] = (y[k] - du[k] * x[k+1]) / u[k];
-      //printf("x=%g\n",x[k]);
+      printf("Qold=%g Q=%g\n",Q[k],Q[k+1]);
+      Q[k] = (y[k] - du[k] * Q[k+1]) / u[k];
+      printf("Qnew=%g\n",Q[k]);
+      //Q[k] = xx[k];
     }
-  return x;
+  //return xx;
 }
 
 

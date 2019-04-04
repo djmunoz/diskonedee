@@ -23,6 +23,6 @@ void advance_cranknicolson(double * Q, struct grid *G, double dt);
 void write_header(struct grid *G, FILE *output);
 void write_to_file(double * Q, FILE *output);
 
-double *invert_tridiagonal_problem(double *x, double * dd, double * du, double * dl, double * b);
-//void invert_tridiagonal_problem(double *x, double * dd, double * du, double * dl, double * b);
+//double *invert_tridiagonal_problem(double *xx,  double * dd, double * du, double * dl, double * b);
+void invert_tridiagonal_problem(double *Q, double * dd, double * du, double * dl, double * b);
 void invert_tridiagonal_CN(double alpha, double * b, double * x, int M);

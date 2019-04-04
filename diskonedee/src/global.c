@@ -4,8 +4,8 @@
 #include "global.h"
 
 int M = 400;
-int N = 1000;
-double timemax = 1000; //24000.0;
+int N = 2;
+double timemax = 10.0; //24000.0;
 double Rmin = 1.0;
 double Rmax = 100.0;
 
