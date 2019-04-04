@@ -32,8 +32,9 @@ double *invert_tridiagonal_problem(double *x, double * dd, double * du, double *
   l[0] = 0;
   u[M-1] = 0;
 
+  /* LU factorization */
   u[0] = dd[0];
-  for (int k=1; k < M-1; k++)
+  for (int k=1; k < M; k++)
     {
       l[k] = dl[k] / u[k-1];
       u[k] = dd[k] - l[k] / du[k-1];
@@ -47,7 +48,7 @@ double *invert_tridiagonal_problem(double *x, double * dd, double * du, double *
   
   /* Finally, solve for x in Ux=y */
   x[M-1] = y[M-1] / u[M-1];
-  for (int k = M-1; k>-1 ; k--)
+  for (int k = M-2; k>-1 ; k--)
     {
       x[k] = (y[k] - du[k] * x[k+1]) / u[k];
       //printf("x=%g\n",x[k]);

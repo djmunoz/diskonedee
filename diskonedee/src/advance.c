@@ -49,15 +49,25 @@ void advance_cranknicolson(double * Q, struct grid *G, double dt)
   /* Fill the RHS vector and diagonals */
   double b[M], dd[M], du[M], dl[M];
 
-  for (int j = 1; j < M+1; j++)
+  b[0] =  dt* 0.5 * G->vals[1].A_coeff_val* Q[2] + (1. + dt * 0.5 * G->vals[1].B_coeff_val)* Q[1];
+  b[0] += Q[0] * dt * 0.5 * G->vals[1].C_coeff_val +  Q[0] * dt * 0.5 * G->vals[1].C_coeff_val;
+  dd[0] =  1. - dt * 0.5 * G->vals[1].B_coeff_val;
+  du[0] = 0;
+  dl[0] = 0;
+  for (int j = 1; j < M-1; j++)
     {
-      b[j] = dt*(0.5 * G->vals[j].A_coeff_val* Q[j+1] + (-1. + 0.5 * G->vals[j].B_coeff_val)* Q[j] + 0.5  * G->vals[j].C_coeff_val* Q[j-1]);
-      dd[j] = dt*(1. - 0.5 * G->vals[j].B_coeff_val);
-      du[j] = -dt*0.5 * G->vals[j].A_coeff_val;
-      dl[j] = -dt*0.5 * G->vals[j].C_coeff_val;
-      printf("b=%g\n",b[j]);
+      b[j] = dt* 0.5 * G->vals[j+1].A_coeff_val* Q[j+2] + (1. + dt * 0.5 * G->vals[j+1].B_coeff_val)* Q[j+1] + dt * 0.5  * G->vals[j+1].C_coeff_val* Q[j];
+      dd[j] = 1. - dt * 0.5 * G->vals[j+1].B_coeff_val;
+      du[j] = -dt*0.5 * G->vals[j+1].A_coeff_val;
+      dl[j] = -dt*0.5 * G->vals[j+1].C_coeff_val;
     }
-  
+  b[M-1] = (1. + dt * 0.5 * G->vals[M].B_coeff_val)* Q[M] + dt * 0.5  * G->vals[M].C_coeff_val* Q[M-1];
+  b[M-1] += Q[M+1] * dt * 0.5 * G->vals[M].A_coeff_val + Q[M+1] * dt * 0.5 * G->vals[M].A_coeff_val;
+  dd[M-1] = 1. - dt * 0.5 * G->vals[M].B_coeff_val;
+  du[M-1] = -dt*0.5 * G->vals[M].A_coeff_val;
+  dl[M-1] = -dt*0.5 * G->vals[M].C_coeff_val;
+
+
   double *Qnew = invert_tridiagonal_problem(Qnew, dd, du, dl, b);
   for (int j = 1; j < M+1; j++)
     Q[j] = Qnew[j-1];
