@@ -11,8 +11,7 @@
 
 
 
-void invert_tridiagonal_problem(double * dd, double * du, double * dl, double * b,
-				double * x, int M)
+double *invert_tridiagonal_problem(double *x, double * dd, double * du, double * dl, double * b)
 {
   /*
     Simple routine to invert a general tridiagonal matrix A and solve for Ax = b
@@ -27,14 +26,14 @@ void invert_tridiagonal_problem(double * dd, double * du, double * dl, double * 
 	   -double *x: (pointer to) vector to be solved for
    */
 
-  
+  x = (double *)malloc((M) *sizeof(double));
   /* First, determine the L, U matrices */
   double u[M], l[M];
   l[0] = 0;
   u[M-1] = 0;
 
   u[0] = dd[0];
-  for (int k=1; k < M; k++)
+  for (int k=1; k < M-1; k++)
     {
       l[k] = dl[k] / u[k-1];
       u[k] = dd[k] - l[k] / du[k-1];
@@ -48,8 +47,12 @@ void invert_tridiagonal_problem(double * dd, double * du, double * dl, double * 
   
   /* Finally, solve for x in Ux=y */
   x[M-1] = y[M-1] / u[M-1];
-  for (int k = M-2; k>-1 ; k--)
-    x[k] = (y[k] - du[k] * x[k+1]) / u[k];
+  for (int k = M-1; k>-1 ; k--)
+    {
+      x[k] = (y[k] - du[k] * x[k+1]) / u[k];
+      //printf("x=%g\n",x[k]);
+    }
+  return x;
 }
 
 

@@ -15,7 +15,7 @@ LIBS=-lm -lgsl -lgslcblas
 _DEPS = disk.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = main.o global.o invert.o grid.o 
+_OBJS = main.o global.o invert.o grid.o disk.o advance.o io.o 
 OBJS = $(patsubst %,$(OBJECT_DIR)/%,$(_OBJS))
 
 $(OBJECT_DIR)/%.o: %.c $(DEPS)

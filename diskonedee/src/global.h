@@ -12,7 +12,7 @@ extern double Rmax;
 
 extern struct parameters
 {
-  double AlphaCofficient;
+  double AlphaCoefficient;
   double VerticalAspectRatio;
   double TempProfileIndex;
 }

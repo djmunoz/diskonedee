@@ -10,27 +10,36 @@
 
 int main(int argc, char **argv)
 {
-    
+  int Noutput=20;  
   double t= 0;
   double dt;
   dt = timemax/N;
-
-  struct grid *Grid = initGrid(Grid, Rmin, Rmax, M);
-
-  double * lambda;
-  init_quant(lambda);//, Grid);
   
+  params.AlphaCoefficient = 0.06;
+  params.VerticalAspectRatio = 0.1;
+  params.TempProfileIndex = 1.0;
+    
+  struct grid *Grid = initGrid(Grid, Rmin, Rmax, M);
+  double *lambda=init_quant(lambda, Grid);
+  
+  char name[20] = "output.txt";
+  FILE *output = fopen(name, "w");
+  write_header(Grid,output);
   
   /* Main loop */
   for (int j=0; j < N; j++) 
     {
       t += dt;
       printf("j=%d, t=%g\n",j,t);
-      //advance(lambda, Grid, dt);
-      //write_to_file(W,t);
+      advance(lambda, Grid, dt);
+      if (j % (N/Noutput) == 0) 
+	  write_to_file(lambda,output);
+
+
     }
   free(lambda);
   free(Grid);
+  fclose(output);
 }
 
 
