@@ -8,13 +8,14 @@ extern int N;
 extern double timemax;
 extern double Rmin;
 extern double Rmax;
-
+extern double dt;
 
 extern struct parameters
 {
   double AlphaCoefficient;
   double VerticalAspectRatio;
   double TempProfileIndex;
+  int BoundaryConditionType;
 }
   params ;
 
@@ -28,6 +29,9 @@ struct gridvals
   double A_coeff_val;
   double B_coeff_val;
   double C_coeff_val;
+  double cn_upper_diag;
+  double cn_middle_diag;
+  double cn_lower_diag;
 };
 
 struct grid

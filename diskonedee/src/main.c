@@ -12,12 +12,12 @@ int main(int argc, char **argv)
 {
   int Noutput=30;  
   double t= 0;
-  double dt;
   dt = timemax/N;
   
   params.AlphaCoefficient = 0.06;
   params.VerticalAspectRatio = 0.1;
   params.TempProfileIndex = 1.0;
+  params.BoundaryConditionType = 1;
     
   struct grid *Grid = initGrid(Grid, Rmin, Rmax, M);
   double *lambda=init_quant(lambda, Grid);

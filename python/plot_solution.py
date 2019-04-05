@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 plt.style.use('classic')
 
 
-path='/home/dmunoz/Documents/REPOSITORIES/diskonedee/diskonedee/'
+path='../diskonedee/'
 filename='output.txt'
 
 
