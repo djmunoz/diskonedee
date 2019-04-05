@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <gsl/gsl_matrix_double.h>
 
 
 //void init_quant(double * Q, double * G);
@@ -21,8 +22,11 @@ void advance_euler(double * Q, struct grid *G, double dt);
 void advance_cranknicolson(double * Q, struct grid *G, double dt);
 
 void write_header(struct grid *G, FILE *output);
-void write_to_file(double * Q, FILE *output);
+void write_to_file(double * Q, struct grid *G, FILE *output);
+
 
 //double *invert_tridiagonal_problem(double *xx,  double * dd, double * du, double * dl, double * b);
 void invert_tridiagonal_problem(double *Q, double * dd, double * du, double * dl, double * b);
 void invert_tridiagonal_CN(double alpha, double * b, double * x, int M);
+gsl_matrix *invert_a_matrix(gsl_matrix *matrix);
+

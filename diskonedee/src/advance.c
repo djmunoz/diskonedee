@@ -2,6 +2,11 @@
 #include <time.h>
 #include <stdlib.h>
 #include <math.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_blas.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_linalg.h>
+
 
 #include "disk.h"
 #include "global.h"
@@ -69,29 +74,47 @@ void advance_cranknicolson(double * Q, struct grid *G, double dt)
   dd[M-1]= 1. - dt * 0.5 * G->vals[M-1].B_coeff_val;
 
 
-  double matrix[M][M];
+  
+  gsl_matrix *m = gsl_matrix_alloc(M, M);
+  gsl_vector *x = gsl_vector_alloc(M);
   for (int j = 1; j < M-1; j++)
     {
-      matrix[j][j] = dd[j];
-      matrix[j][j+1] = du[j];
-      matrix[j][j-1] = dl[j];
+      gsl_matrix_set(m,j,j, dd[j]);
+      gsl_matrix_set(m,j,j+1, du[j]);
+      gsl_matrix_set(m,j,j-1, dl[j]);
+      gsl_vector_set(x, j, b[j]);
     }
-  matrix[0][0] = dd[0];
-  matrix[0][1] = du[0];
 
-  matrix[0][0] = dd[M-1];
-  matrix[1][0] = dl[M-1];
+  
+  gsl_matrix_set(m,0,0,dd[0]);
+  gsl_matrix_set(m,0,1,du[0]);
+  gsl_vector_set(x, 0, b[0]);
+  
+  gsl_matrix_set(m,M-1,M-1,dd[M-1]);
+  gsl_matrix_set(m,M-1,M-2,dl[M-1]);
+  gsl_vector_set(x, M-1, b[M-1]);
 
+  /*
+  for (int j = 1; j < M-1; j++)
+    for (int i = 0; i < M-1; i++) 
+	printf ("m(%d,%d) = %g\n", i, j, 
+		gsl_matrix_get (m, i, j));
+  */
+
+  gsl_vector *Qnew = gsl_vector_alloc(M);
+
+
+  gsl_matrix *inverse = invert_a_matrix(m);
+
+  
+  gsl_blas_dgemv(CblasNoTrans, 1.0, inverse, x, 0.0, Qnew);
+  
   //double *Qnew = invert_tridiagonal_problem(Qnew, dd, du, dl, b);
   //Q = Qnew;
-  invert_tridiagonal_problem(Q, dd, du, dl, b);
-  /*
+  //invert_tridiagonal_problem(Q, dd, du, dl, b);
   for (int j = 0; j < M; j++)
-    {
-      //Q[j] = Qnew[j];
-      //printf("j=%d Qnew=%g, Q=%g\n", j,Qnew[j],Q[j]);
-    }
-  */
+      Q[j] = gsl_vector_get(Qnew,j);
+
   //invert_tridiagonal_problem(Q, dd, du, dl, b);  
   return;
 

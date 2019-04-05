@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv)
 {
-  int Noutput=10;  
+  int Noutput=30;  
   double t= 0;
   double dt;
   dt = timemax/N;
@@ -29,8 +29,8 @@ int main(int argc, char **argv)
   /* Main loop */
   for (int j=0; j < N; j++) 
     {
-      //if (j % (N/Noutput) == 0) 
-      write_to_file(lambda,output);
+      if (j % (N/Noutput) == 0) 
+	write_to_file(lambda,Grid,output);
       printf("j=%d, t=%g\n",j,t);
       advance(lambda, Grid, dt);
       t += dt;
