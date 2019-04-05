@@ -52,55 +52,35 @@ void advance_cranknicolson(double * Q, struct grid *G, double dt)
   double Qin = 0; //eval_inner_boundary(Q,G);
   double Qout = 0; // eval_outer_boundary(Q,G);
   /* Fill the RHS vector and diagonals */
-  double b[M], dd[M], du[M], dl[M];
+  double b[M];
 
-  for (int j = 1; j < M-1; j++)
-    {
-      b[j] = dt* 0.5 * G->vals[j].A_coeff_val* Q[j+1] + (1. + dt * 0.5 * G->vals[j].B_coeff_val)* Q[j] + dt * 0.5  * G->vals[j].C_coeff_val* Q[j-1];
-      dd[j] = 1. - dt * 0.5 * G->vals[j].B_coeff_val;
-      du[j] = -dt*0.5 * G->vals[j].A_coeff_val;
-      dl[j] = -dt*0.5 * G->vals[j].C_coeff_val;
-    }
-  b[0] =  dt* 0.5 * G->vals[0].A_coeff_val* Q[1] + (1. + dt * 0.5 * G->vals[0].B_coeff_val)* Q[0]+
-    dt * 0.5 * G->vals[1].C_coeff_val * Qin +  Qin * dt * 0.5 * G->vals[1].C_coeff_val;
-
-  b[M-1] = (1. + dt * 0.5 * G->vals[M-1].B_coeff_val)* Q[M] + dt * 0.5  * G->vals[M-1].C_coeff_val* Q[M-1]+
-    Qout * dt * 0.5 * G->vals[M-1].A_coeff_val + Qout * dt * 0.5 * G->vals[M-1].A_coeff_val;
-  dl[0] = 0;
-  dl[M-1]= -dt*0.5 * G->vals[M-1].C_coeff_val;
-  du[0] = -dt*0.5 * G->vals[0].A_coeff_val;
-  du[M-1] = 0;
-  dd[0]= 1. - dt * 0.5 * G->vals[0].B_coeff_val;
-  dd[M-1]= 1. - dt * 0.5 * G->vals[M-1].B_coeff_val;
-
-
+  b[0] = -G->vals[0].cn_upper_diag * Q[1] + (2.- G->vals[0].cn_middle_diag)* Q[0];
+  b[M-1] = (2.- G->vals[M-1].cn_middle_diag)* Q[M-1] -G->vals[M-1].cn_lower_diag * Q[M-2];
   
   gsl_matrix *m = gsl_matrix_alloc(M, M);
   gsl_vector *x = gsl_vector_alloc(M);
   for (int j = 1; j < M-1; j++)
     {
-      gsl_matrix_set(m,j,j, dd[j]);
-      gsl_matrix_set(m,j,j+1, du[j]);
-      gsl_matrix_set(m,j,j-1, dl[j]);
+      gsl_matrix_set(m,j,j,  G->vals[j].cn_middle_diag);
+      gsl_matrix_set(m,j,j+1, G->vals[j].cn_upper_diag);
+      gsl_matrix_set(m,j,j-1, G->vals[j].cn_lower_diag);
+      b[j] = -G->vals[j].cn_upper_diag * Q[j+1] + (2.- G->vals[j].cn_middle_diag)* Q[j] -G->vals[j].cn_lower_diag * Q[j-1];
       gsl_vector_set(x, j, b[j]);
     }
-
-  
-  gsl_matrix_set(m,0,0,dd[0]);
-  gsl_matrix_set(m,0,1,du[0]);
+  gsl_matrix_set(m,0,0,G->vals[0].cn_middle_diag);
+  gsl_matrix_set(m,0,1,G->vals[0].cn_upper_diag);
   gsl_vector_set(x, 0, b[0]);
-  
-  gsl_matrix_set(m,M-1,M-1,dd[M-1]);
-  gsl_matrix_set(m,M-1,M-2,dl[M-1]);
+  gsl_matrix_set(m,M-1,M-1,G->vals[M-1].cn_middle_diag);
+  gsl_matrix_set(m,M-1,M-2,G->vals[M-1].cn_lower_diag);
   gsl_vector_set(x, M-1, b[M-1]);
 
+
   /*
-  for (int j = 1; j < M-1; j++)
-    for (int i = 0; i < M-1; i++) 
+  for (int j = 0; j < M; j++)
+    for (int i = 0; i < M; i++) 
 	printf ("m(%d,%d) = %g\n", i, j, 
 		gsl_matrix_get (m, i, j));
   */
-
   gsl_vector *Qnew = gsl_vector_alloc(M);
 
 

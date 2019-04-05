@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
   int Noutput=30;  
   double t= 0;
-  dt = timemax/N;
+  N = timemax/dt;
   
   params.AlphaCoefficient = 0.06;
   params.VerticalAspectRatio = 0.1;
@@ -21,8 +21,21 @@ int main(int argc, char **argv)
     
   struct grid *Grid = initGrid(Grid, Rmin, Rmax, M);
   double *lambda=init_quant(lambda, Grid);
+
+  char *name;
+  if (params.BoundaryConditionType == 0)
+    {
+      name = "output_zerotorque.txt";
+    }
+  else if (params.BoundaryConditionType == 1)
+    {
+      name = "output_zamfb.txt";
+    }
+  else
+    {
+      name = "output.txt";
+    }
   
-  char name[20] = "output.txt";
   FILE *output = fopen(name, "w");
   write_header(Grid,output);
   

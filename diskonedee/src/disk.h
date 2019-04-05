@@ -10,9 +10,11 @@
 struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints);
 double *init_quant(double *Q, struct grid *G);
 
+double eval_omegaprimeprime_func(double R);
 double eval_omegaprime_func(double R);
 double eval_nu_func(double R);
 double eval_lprime_func(double R);
+double eval_g_func(double R);
 double eval_inner_boundary(double * Q, struct grid *G);
 double eval_outer_boundary(double * Q, struct grid *G);
 

@@ -56,6 +56,16 @@ double eval_lprime_func(double R)
 
 }
 
+double eval_g_func(double R)
+{
+  double g = -1.0/(eval_lprime_func(R) / eval_l_func(R) -
+		   eval_nuprime_func(R)/ eval_nu_func(R) -
+		   2./ R -
+		   eval_omegaprimeprime_func(R) / eval_omegaprime_func(R));
+  return g;
+
+}
+
 
 double eval_inner_boundary(double * Q, struct grid *G)
 {
