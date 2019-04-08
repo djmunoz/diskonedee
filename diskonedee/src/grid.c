@@ -78,8 +78,15 @@ struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
   
   if (params.BoundaryConditionType == 1)
     {
-      G->vals[0].cn_upper_diag = 0.25 - 0.5 * eval_g_func(G->vals[1].side_val) / (G->vals[1].center_val - G->vals[0].center_val);
-      G->vals[0].cn_middle_diag = 0.25 + 0.5 * eval_g_func(G->vals[1].side_val) / (G->vals[1].center_val - G->vals[0].center_val);
+      Rc = G->vals[0].center_val;
+      Rp = G->vals[1].center_val;
+      G->vals[0].cn_middle_diag = 1 - 0.5 / (G->vals[1].side_val - Rmin) * eval_nu_func(Rc) / Rc *
+	(Rc * Rc * Rc * eval_omegaprime_func(Rc) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc) +
+	 Rmin * Rmin * Rmin * eval_omegaprimeprime_func(Rmin) / eval_lprime_func(Rmin) +
+	 3 * Rmin * Rmin * eval_omegaprime_func(Rmin) / eval_lprime_func(Rmin));
+      G->vals[0].cn_upper_diag = 0.5 / (G->vals[1].side_val - Rmin) * eval_nu_func(Rp) / Rp *
+	(Rp * Rp * Rp * eval_omegaprime_func(Rp) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc));
+
       G->vals[0].cn_lower_diag = 0;
 
       G->vals[M-1].cn_upper_diag = 0;

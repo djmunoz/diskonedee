@@ -22,9 +22,11 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(8,5))
     fig.subplots_adjust(bottom=0.12,right=0.97,top=0.97,left=0.13)
     ax = fig.add_subplot(111)
-    
+
     ax.plot(x,data[1,:],color='r',lw=1.8)
     for sol in data[2:,:]:
+        dsigmadr=np.gradient(sol)/np.gradient(x)
+        #ax.plot(x,sol/dsigmadr,color='k',lw=0.3)
         ax.plot(x,sol,color='k',lw=0.3)
 
     ax.set_xlabel(r'$R$',size=24,labelpad=0)
