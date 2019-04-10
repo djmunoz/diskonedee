@@ -18,6 +18,7 @@ int main(int argc, char **argv)
   params.VerticalAspectRatio = 0.1;
   params.TempProfileIndex = 1.0;
   params.BoundaryConditionType = 1;
+  params.ExternalSources = 1;
     
   struct grid *Grid = initGrid(Grid, Rmin, Rmax, M);
   double *lambda=init_quant(lambda, Grid);

@@ -74,6 +74,33 @@ struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
       G->vals[j].cn_upper_diag = -dt*0.5 * G->vals[j].A_coeff_val;
       G->vals[j].cn_middle_diag = 1. - dt * 0.5 * G->vals[j].B_coeff_val;
       G->vals[j].cn_lower_diag = -dt*0.5 * G->vals[j].C_coeff_val;
+
+      if (params.ExternalSources == 1)
+	{
+	  double D_coeff_val, E_coeff_val, F_coeff_val, G_coeff_val;
+	  D_coeff_val = 0.25 * dt * delta_inv * eval_l_func(G->vals[j+1].side_val) /
+	    eval_lprime_func(G->vals[j+1].side_val) * (eval_beta_func(G->vals[j+1].side_val) -
+						       eval_gamma_func(G->vals[j+1].side_val));
+	  
+	  E_coeff_val = 0.25 * dt * delta_inv * (eval_l_func(G->vals[j+1].side_val) /eval_lprime_func(G->vals[j+1].side_val) *
+						 (eval_beta_func(G->vals[j+1].side_val) - eval_gamma_func(G->vals[j+1].side_val)) -
+						 eval_l_func(G->vals[j].side_val) /eval_lprime_func(G->vals[j].side_val) *
+						 (eval_beta_func(G->vals[j].side_val) - eval_gamma_func(G->vals[j].side_val)));
+	  	  
+	  F_coeff_val = -0.25 * dt * delta_inv * eval_l_func(G->vals[j].side_val) /
+	    eval_lprime_func(G->vals[j].side_val) * (eval_beta_func(G->vals[j].side_val) -
+						     eval_gamma_func(G->vals[j].side_val));
+	  
+	  G_coeff_val = -0.5 * dt * eval_gamma_func(G->vals[j].center_val);
+	  
+	  G->vals[j].cn_upper_diag += -D_coeff_val;
+	  G->vals[j].cn_middle_diag += -E_coeff_val - G_coeff_val; 
+	  G->vals[j].cn_lower_diag += -F_coeff_val;
+	  
+	}
+  
+
+      
     }
   
   if (params.BoundaryConditionType == 1)
@@ -93,7 +120,7 @@ struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
       G->vals[M-1].cn_middle_diag = 0.25 - 0.5 * eval_g_func(G->vals[M-1].side_val) / (G->vals[M-1].center_val - G->vals[M-2].center_val);
       G->vals[M-1].cn_lower_diag = 0.25 + 0.5 * eval_g_func(G->vals[M-1].side_val) / (G->vals[M-1].center_val - G->vals[M-2].center_val);
     }
- 
+
    return G;
 }
 

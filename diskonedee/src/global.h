@@ -16,6 +16,7 @@ extern struct parameters
   double VerticalAspectRatio;
   double TempProfileIndex;
   int BoundaryConditionType;
+  int ExternalSources;
 }
   params ;
 

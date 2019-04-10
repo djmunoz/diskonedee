@@ -66,6 +66,27 @@ double eval_g_func(double R)
 
 }
 
+double blip(double R)
+{
+  double R0,w, Omega;
+  R0 = 5.0;
+  w = 0.5;
+  Omega= 1./sqrt(R0)/R0;
+  return Omega*exp(-(R-R0)*(R-R0)/2/w/w);
+}
+
+double eval_beta_func(double R)
+{
+  return 0; //blip(R);
+}
+
+
+double eval_gamma_func(double R)
+{
+  return 0.01 * blip(R);
+}
+
+
 
 double eval_inner_boundary(double * Q, struct grid *G)
 {

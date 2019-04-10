@@ -13,8 +13,12 @@ double *init_quant(double *Q, struct grid *G);
 double eval_omegaprimeprime_func(double R);
 double eval_omegaprime_func(double R);
 double eval_nu_func(double R);
+double eval_l_func(double R);
 double eval_lprime_func(double R);
 double eval_g_func(double R);
+double eval_beta_func(double R);
+double eval_gamma_func(double R);
+
 double eval_inner_boundary(double * Q, struct grid *G);
 double eval_outer_boundary(double * Q, struct grid *G);
 
