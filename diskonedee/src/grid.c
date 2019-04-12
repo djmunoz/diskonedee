@@ -14,19 +14,25 @@ struct grid
   //double Beta[];
 };
 */
-struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
+
+struct grid *init_grid(struct grid *G)
 {
   G = malloc( sizeof(*G) +  (M ) * sizeof(struct gridvals));
   
-  G->Npoints = Npoints;
-  double deltalog = (log10(Rmax) - log10(Rmin))/Npoints;
-  double delta_inv, func_jplus, func_jminus, func_j; 
+  G->Npoints = M;
+  double deltalog = (log10(Rmax) - log10(Rmin))/G->Npoints;
   for (int j=0; j < M; j++)
     {
       G->vals[j].center_val = Rmin * pow(10, (j*1. + 0.5) * deltalog);
       G->vals[j].side_val = Rmin * pow(10, j * deltalog);
     }
 
+  return G;
+}
+
+void init_grid_terms(double *Q, struct grid *G)
+{
+  double delta_inv, func_jplus, func_jminus, func_j; 
   double Rc, Rm, Rp, lprimem, lprimep;
   for (int j=0; j < M; j++)
     {
@@ -47,16 +53,21 @@ struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
 	{
 	  Rc = G->vals[0].center_val;
 	  Rp = G->vals[1].side_val;
-	  Rm = G->vals[0].side_val;
+	  Rm = Rmin;
 	  delta_inv = 1.0 / (G->vals[1].side_val - Rmin);
 	  lprimep = eval_lprime_func(G->vals[1].side_val);
 	  lprimem = eval_lprime_func(Rmin);
 	}
       else
 	{
+	  /*
 	  Rc = G->vals[M-1].center_val;
 	  Rp = G->vals[M-1].side_val;
 	  Rm = G->vals[M-2].side_val;
+	  */
+	  Rc = G->vals[M-1].center_val;
+	  Rp = Rmax;
+	  Rm = G->vals[M-1].side_val;
 	  delta_inv = 1.0 / (Rmax - G->vals[M-1].side_val);
 	  lprimep = eval_lprime_func(Rmax);
 	  lprimem = eval_lprime_func(G->vals[M-1].side_val);
@@ -103,7 +114,7 @@ struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
       
     }
   
-  if (params.BoundaryConditionType == 1)
+  if (params.InnerBoundaryConditionType == 1)
     {
       Rc = G->vals[0].center_val;
       Rp = G->vals[1].center_val;
@@ -115,13 +126,19 @@ struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints)
 	(Rp * Rp * Rp * eval_omegaprime_func(Rp) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc));
 
       G->vals[0].cn_lower_diag = 0;
+    }
 
+  if (params.OuterBoundaryConditionType == 1)
+    {
       G->vals[M-1].cn_upper_diag = 0;
       G->vals[M-1].cn_middle_diag = 0.25 - 0.5 * eval_g_func(G->vals[M-1].side_val) / (G->vals[M-1].center_val - G->vals[M-2].center_val);
       G->vals[M-1].cn_lower_diag = 0.25 + 0.5 * eval_g_func(G->vals[M-1].side_val) / (G->vals[M-1].center_val - G->vals[M-2].center_val);
     }
-
-   return G;
+  else if (params.OuterBoundaryConditionType == 2)
+    {
+      G->vals[M-1].cn_upper_diag = 0;
+      G->vals[M-1].rhs = G->val_out
+    }
 }
 
 double *init_quant(double *Q, struct grid *G)
@@ -132,11 +149,19 @@ double *init_quant(double *Q, struct grid *G)
   for (int j=0; j < M; j++) 
     {
       radius = G->vals[j].center_val;
-      Q[j] = exp(-(radius-30)*(radius-30)/20.0);
+      //Q[j] = exp(-(radius-30)*(radius-30)/20.0);
+      Q[j] = 0.1*pow(radius,-0.5) * radius;
     }
 
   return Q;
 }
 
 
+void init_boundaries(double *Q, struct grid *G)
+{
+  G->val_in = Q[0];
+  G->val_out =  Q[M-1];
+  
+  return;
+}
 

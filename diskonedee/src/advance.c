@@ -49,12 +49,13 @@ void advance_euler(double * Q, struct grid *G, double dt)
 
 void advance_cranknicolson(double * Q, struct grid *G, double dt)
 {
-  double Qin = 0; //eval_inner_boundary(Q,G);
-  double Qout = 0; // eval_outer_boundary(Q,G);
+  //double Qin = eval_inner_boundary(Q,G);
+  //double Qout = eval_outer_boundary(Q,G);
   /* Fill the RHS vector and diagonals */
   double b[M];
 
   b[0] = -G->vals[0].cn_upper_diag * Q[1] + (2.- G->vals[0].cn_middle_diag)* Q[0];
+
   b[M-1] = (2.- G->vals[M-1].cn_middle_diag)* Q[M-1] -G->vals[M-1].cn_lower_diag * Q[M-2];
 
   

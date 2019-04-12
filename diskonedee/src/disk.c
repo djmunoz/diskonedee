@@ -8,12 +8,18 @@
 #include "global.h"
 
 
+double eval_omega_func(double R)
+{
+  double GM = 1.0;
+  double omega = sqrt(GM) / R / sqrt(R);
+  return omega;
+}
+
 double eval_omegaprime_func(double R)
 {
   double GM = 1.0;
   double omegaprime = -1.5 * sqrt(GM) / R / R / sqrt(R);
   return omegaprime;
-
 }
 
 double eval_omegaprimeprime_func(double R)
@@ -24,6 +30,12 @@ double eval_omegaprimeprime_func(double R)
 
 }
 
+double eval_h_func(double R)
+{
+  double h = params.VerticalAspectRatio * pow(R, 0.5 - 0.5 * params.TempProfileIndex);
+  return h;
+
+}
 double eval_nu_func(double R)
 {
   double GM = 1.0;
@@ -83,7 +95,7 @@ double eval_beta_func(double R)
 
 double eval_gamma_func(double R)
 {
-  return 0.01 * blip(R);
+  return 0.005 * blip(R);
 }
 
 

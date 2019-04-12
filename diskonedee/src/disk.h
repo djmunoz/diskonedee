@@ -7,12 +7,17 @@
 //void init_grid(double * Q);
 //void init_grid(struct grid *G);
 
-struct grid *initGrid(struct grid *G, double R1, double R2, int Npoints);
+struct grid *init_grid(struct grid *G);
 double *init_quant(double *Q, struct grid *G);
+void init_grid_terms(double *Q, struct grid *G);
+void init_boundaries(double *Q, struct grid *G);
 
+double eval_omega_func(double R);
 double eval_omegaprimeprime_func(double R);
 double eval_omegaprime_func(double R);
+double eval_h_func(double R);
 double eval_nu_func(double R);
+double eval_nuprime_func(double R);
 double eval_l_func(double R);
 double eval_lprime_func(double R);
 double eval_g_func(double R);
@@ -28,7 +33,7 @@ void advance_euler(double * Q, struct grid *G, double dt);
 void advance_cranknicolson(double * Q, struct grid *G, double dt);
 
 void write_header(struct grid *G, FILE *output);
-void write_to_file(double * Q, struct grid *G, FILE *output);
+void write_to_file(double * Q, struct grid *G, FILE *output, double time);
 
 
 //double *invert_tridiagonal_problem(double *xx,  double * dd, double * du, double * dl, double * b);
