@@ -137,7 +137,7 @@ void init_grid_terms(double *Q, struct grid *G)
   else if (params.OuterBoundaryConditionType == 2)
     {
       G->vals[M-1].cn_upper_diag = 0;
-      G->vals[M-1].rhs = G->val_out
+      G->vals[M-1].cn_rhs = G->val_out;
     }
 }
 
