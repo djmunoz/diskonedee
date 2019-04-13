@@ -57,7 +57,11 @@ void advance_cranknicolson(double * Q, struct grid *G, double dt)
   b[0] = -G->vals[0].cn_upper_diag * Q[1] + (2.- G->vals[0].cn_middle_diag)* Q[0];
 
   b[M-1] = (2.- G->vals[M-1].cn_middle_diag)* Q[M-1] -G->vals[M-1].cn_lower_diag * Q[M-2];
-
+  if (params.OuterBoundaryConditionType == 2)
+    {
+      b[M-1]+= -G->vals[M-1].cn_upper_diag * 2 * G->val_out;
+    }
+    
   
   gsl_matrix *m = gsl_matrix_alloc(M, M);
   gsl_vector *x = gsl_vector_alloc(M);

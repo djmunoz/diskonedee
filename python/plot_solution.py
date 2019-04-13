@@ -21,7 +21,7 @@ if __name__ == '__main__':
     x = data[0,1:]
 
     fig = plt.figure(figsize=(18,4))
-    fig.subplots_adjust(bottom=0.15,right=0.99,top=0.98,left=0.05)
+    fig.subplots_adjust(bottom=0.15,right=0.99,top=0.97,left=0.05,wspace=.25)
 
     ax1 = fig.add_subplot(131)
     ax2 = fig.add_subplot(132)
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     omega = data[1,1:]
     coeff = -2 * np.pi * x**3 * data[4,1:] * data[2,1:]
     fnu = coeff * data[6,1:]
-    mdot = np.gradient(fnu)/np.gradient(x) / data[3,1:]
+    mdot = np.gradient(fnu,x) / data[3,1:]
     flux = mdot * omega * x**2 - fnu
     ind = mdot != 1e30
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     for sol in data[7:,1:]:
         ax1.plot(x,sol,color='k',lw=0.3)
         fnu = coeff * sol
-        mdot = np.gradient(fnu)/np.gradient(x) / data[3,1:]
+        mdot = np.gradient(fnu,x) / data[3,1:]
         flux = mdot * omega * x**2 - fnu
         ax2.plot(x[ind],mdot[ind],color='k',lw=0.3)
         ax3.plot(x[ind],flux[ind],color='k',lw=0.3)
@@ -59,14 +59,14 @@ if __name__ == '__main__':
     ax2.set_xlabel(r'$R$',size=24,labelpad=0)
     ax2.set_ylabel(r'$\dot{M}$',size=24,labelpad=0)
     ax2.set_xlim(1,x[ind].max())
-    ax2.set_ylim(1.e-6,1e-2)
+    ax2.set_ylim(1.e-5,1e-3)
     ax2.set_xscale('log')
     ax2.set_yscale('log')
     
     ax3.set_xlabel(r'$R$',size=24,labelpad=0)
     ax3.set_ylabel(r'$\dot{M}l - F_\nu$',size=24,labelpad=0)
     ax3.set_xlim(1,x[ind].max())
-    ax3.set_ylim(-0.0001,0.0001)
+    ax3.set_ylim(-0.0001,0.0005)
     ax3.set_xscale('log')
     #ax3.set_yscale('log')
     

@@ -10,16 +10,16 @@
 
 int main(int argc, char **argv)
 {
-  int Noutput=30;  
+  int Noutput=40;  
   double t= 0;
 
-  params.TimeMax = 5.e4;
+  params.TimeMax = 1.5e5;
   params.AlphaCoefficient = 0.06;
   params.VerticalAspectRatio = 0.1;
   params.TempProfileIndex = 1.0;
   params.InnerBoundaryConditionType = 1;
-  params.OuterBoundaryConditionType = 2;
-  params.ExternalSources = 0;
+  params.OuterBoundaryConditionType = 1;
+  params.ExternalSources = 1;
 
   N = params.TimeMax/dt;
 

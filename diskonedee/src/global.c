@@ -5,7 +5,7 @@
 
 int M = 600;
 int N;
-double dt = 300;
+double dt = 400;
 double Rmin = 1.0;
 double Rmax = 100.0;
 

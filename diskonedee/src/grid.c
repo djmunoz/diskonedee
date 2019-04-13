@@ -5,15 +5,6 @@
 #include "disk.h"
 #include "global.h"
 
-/*
-struct grid
-{
-  int Mpoints;
-  double vals[];
-  //double Alpha[];
-  //double Beta[];
-};
-*/
 
 struct grid *init_grid(struct grid *G)
 {
@@ -118,11 +109,11 @@ void init_grid_terms(double *Q, struct grid *G)
     {
       Rc = G->vals[0].center_val;
       Rp = G->vals[1].center_val;
-      G->vals[0].cn_middle_diag = 1 - 0.5 / (G->vals[1].side_val - Rmin) * eval_nu_func(Rc) / Rc *
+      G->vals[0].cn_middle_diag = 1 - 0.5 * dt / (G->vals[1].side_val - Rmin) * eval_nu_func(Rc) / Rc *
 	(Rc * Rc * Rc * eval_omegaprime_func(Rc) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc) +
 	 Rmin * Rmin * Rmin * eval_omegaprimeprime_func(Rmin) / eval_lprime_func(Rmin) +
 	 3 * Rmin * Rmin * eval_omegaprime_func(Rmin) / eval_lprime_func(Rmin));
-      G->vals[0].cn_upper_diag = 0.5 / (G->vals[1].side_val - Rmin) * eval_nu_func(Rp) / Rp *
+      G->vals[0].cn_upper_diag = 0.5 * dt / (G->vals[1].side_val - Rmin) * eval_nu_func(Rp) / Rp *
 	(Rp * Rp * Rp * eval_omegaprime_func(Rp) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc));
 
       G->vals[0].cn_lower_diag = 0;
@@ -130,13 +121,25 @@ void init_grid_terms(double *Q, struct grid *G)
 
   if (params.OuterBoundaryConditionType == 1)
     {
+      Rc = G->vals[M-1].center_val;
+      Rm = G->vals[M-2].center_val;
+      
       G->vals[M-1].cn_upper_diag = 0;
-      G->vals[M-1].cn_middle_diag = 0.25 - 0.5 * eval_g_func(G->vals[M-1].side_val) / (G->vals[M-1].center_val - G->vals[M-2].center_val);
-      G->vals[M-1].cn_lower_diag = 0.25 + 0.5 * eval_g_func(G->vals[M-1].side_val) / (G->vals[M-1].center_val - G->vals[M-2].center_val);
+
+      G->vals[M-1].cn_middle_diag = 1 - 0.5 * dt / (Rmax - G->vals[M-1].side_val) * eval_nu_func(Rc) / Rc *
+	(Rc * Rc * Rc * eval_omegaprime_func(Rc) / eval_lprime_func(G->vals[M-1].side_val) / (Rc - Rm) +
+	 -Rmax * Rmax * Rmax * eval_omegaprimeprime_func(Rmax) / eval_lprime_func(Rmax) -
+	 3 * Rmax * Rmax * eval_omegaprime_func(Rmax) / eval_lprime_func(Rmax));
+      
+      G->vals[M-1].cn_lower_diag = 0.5 * dt / (Rmax - G->vals[M-1].side_val) * eval_nu_func(Rm) / Rm *
+	(Rm * Rm * Rm * eval_omegaprime_func(Rm) / eval_lprime_func(G->vals[M-1].side_val) / (Rc - Rm));
+
+      
+
     }
   else if (params.OuterBoundaryConditionType == 2)
     {
-      G->vals[M-1].cn_upper_diag = 0;
+      //G->vals[M-1].cn_upper_diag = 0;
       G->vals[M-1].cn_rhs = G->val_out;
     }
 }
@@ -149,8 +152,7 @@ double *init_quant(double *Q, struct grid *G)
   for (int j=0; j < M; j++) 
     {
       radius = G->vals[j].center_val;
-      //Q[j] = exp(-(radius-30)*(radius-30)/20.0);
-      Q[j] = 0.1*pow(radius,-0.5) * radius;
+      Q[j] = get_profile(radius);
     }
 
   return Q;
@@ -159,9 +161,13 @@ double *init_quant(double *Q, struct grid *G)
 
 void init_boundaries(double *Q, struct grid *G)
 {
-  G->val_in = Q[0];
-  G->val_out =  Q[M-1];
+  G->val_in = get_profile(Rmin);
+  G->val_out = get_profile(Rmax);
   
   return;
 }
 
+double get_profile(double R)
+{
+  return  get_profile_powerlaw_truncated(R);
+}

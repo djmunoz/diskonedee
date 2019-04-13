@@ -41,3 +41,8 @@ void invert_tridiagonal_problem(double *Q, double * dd, double * du, double * dl
 void invert_tridiagonal_CN(double alpha, double * b, double * x, int M);
 gsl_matrix *invert_a_matrix(gsl_matrix *matrix);
 
+
+double get_profile(double R);
+double get_profile_powerlaw_truncated(double R);
+double get_profile_powerlaw(double R);
+double get_profile_deltafunc(double R);
