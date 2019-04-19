@@ -16,6 +16,7 @@ extern struct parameters
   int InnerBoundaryConditionType;
   int OuterBoundaryConditionType;
   int ExternalSources;
+  double Softening;
 }
   params ;
 

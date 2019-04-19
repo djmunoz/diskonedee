@@ -4,7 +4,6 @@ CC=gcc
 
 SRC_DIR=src
 INCLUDE_DIR=.
-GSL_INCLUDE_DIR=/usr/include/gsl
 CFLAGS=-I$(INCLUDE_DIR) -I$(GSL_INCLUDE_DIR) -std=c99
 
 

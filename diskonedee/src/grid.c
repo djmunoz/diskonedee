@@ -109,13 +109,22 @@ void init_grid_terms(double *Q, struct grid *G)
     {
       Rc = G->vals[0].center_val;
       Rp = G->vals[1].center_val;
+
+      /*
       G->vals[0].cn_middle_diag = 1 - 0.5 * dt / (G->vals[1].side_val - Rmin) * eval_nu_func(Rc) / Rc *
 	(Rc * Rc * Rc * eval_omegaprime_func(Rc) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc) +
 	 Rmin * Rmin * Rmin * eval_omegaprimeprime_func(Rmin) / eval_lprime_func(Rmin) +
 	 3 * Rmin * Rmin * eval_omegaprime_func(Rmin) / eval_lprime_func(Rmin));
       G->vals[0].cn_upper_diag = 0.5 * dt / (G->vals[1].side_val - Rmin) * eval_nu_func(Rp) / Rp *
 	(Rp * Rp * Rp * eval_omegaprime_func(Rp) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc));
-
+      */
+      G->vals[0].cn_middle_diag = 1 - 0.5 * dt / (G->vals[1].side_val - Rmin) * 
+	(eval_nu_func(Rc) * Rc * Rc * eval_omegaprime_func(Rc) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc) +
+	 (Rp - Rmin) / (Rp - Rc) * eval_nu_func(Rmin) * eval_omegaprime_func(Rmin) / eval_omega_func(Rmin));
+      G->vals[0].cn_upper_diag = 0.5 * dt / (G->vals[1].side_val - Rmin) * 
+	(eval_nu_func(Rp) * Rp * Rp * eval_omegaprime_func(Rp) / eval_lprime_func(G->vals[0].side_val) / (Rp - Rc)+
+	 (Rc - Rmin) / (Rp - Rc) * eval_nu_func(Rmin) * eval_omegaprime_func(Rmin) / eval_omega_func(Rmin));
+   
       G->vals[0].cn_lower_diag = 0;
     }
 
