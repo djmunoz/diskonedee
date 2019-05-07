@@ -32,6 +32,7 @@ void advance(double * Q,  struct grid *G, double dt);
 void advance_euler(double * Q, struct grid *G, double dt);
 void advance_cranknicolson(double * Q, struct grid *G, double dt);
 
+void read_params(void);
 void write_header(struct grid *G, FILE *output);
 void write_to_file(double * Q, struct grid *G, FILE *output, double time);
 

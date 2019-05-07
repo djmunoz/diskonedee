@@ -160,8 +160,8 @@ double eval_g_func(double R)
 double blip(double R)
 {
   double R0,w, Omega;
-  R0 = 5.0;
-  w = 0.5;
+  R0 = 2.8;
+  w = 0.4;
   Omega= 1./sqrt(R0)/R0;
   return Omega*exp(-(R-R0)*(R-R0)/2/w/w);
 }

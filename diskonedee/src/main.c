@@ -10,18 +10,18 @@
 
 int main(int argc, char **argv)
 {
+  
+  read_params();
+  
   int Noutput=40;  
   double t= 0;
 
-  params.TimeMax = 4e4;
-  params.AlphaCoefficient = 0.06;
-  params.VerticalAspectRatio = 0.1;
-  params.TempProfileIndex = 1.0;
-  params.InnerBoundaryConditionType = 1;
-  params.OuterBoundaryConditionType = 1;
-  params.ExternalSources = 0;
-  params.Softening = 1;
-
+  printf("TimeMax=%g\n",params.TimeMax);
+  printf("AlphaCoefficient=%g\n",params.AlphaCoefficient);
+  printf("VerticalAspectRatio=%g\n", params.VerticalAspectRatio);
+  printf("TempProfileIndex=%g\n",params.TempProfileIndex);
+  
+  
   N = params.TimeMax/dt;
 
   
