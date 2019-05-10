@@ -168,13 +168,13 @@ double blip(double R)
 
 double eval_beta_func(double R)
 {
-  return 0; //blip(R);
+  return params.ExternalTorqueStrength * blip(R);
 }
 
 
 double eval_gamma_func(double R)
 {
-  return 0.005 * blip(R);
+  return params.ExternalAccretionStrength * blip(R);
 }
 
 

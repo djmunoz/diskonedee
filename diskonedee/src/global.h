@@ -3,19 +3,24 @@
 
 extern int M;
 extern int N;
+extern double dt;
 extern double Rmin;
 extern double Rmax;
-extern double dt;
+
 
 extern struct parameters
 {
   double TimeMax;
+  double dt;
+  int Ngrid;
   double AlphaCoefficient;
   double VerticalAspectRatio;
   double TempProfileIndex;
   int InnerBoundaryConditionType;
   int OuterBoundaryConditionType;
   int ExternalSources;
+  double ExternalAccretionStrength;
+  double ExternalTorqueStrength;
   double Softening;
 }
   params ;

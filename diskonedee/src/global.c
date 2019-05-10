@@ -3,9 +3,9 @@
 
 #include "global.h"
 
-int M = 600;
+int M;
 int N;
-double dt = 400;
+double dt;
 double Rmin = 1.0;
 double Rmax = 100.0;
 

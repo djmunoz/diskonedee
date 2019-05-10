@@ -35,6 +35,14 @@ void read_params(void)
   addr[nt] = &params.TimeMax;
   id[nt++] = REAL;
 
+  strcpy(paramtag[nt], "dt");
+  addr[nt] = &params.dt;
+  id[nt++] = REAL;
+
+  strcpy(paramtag[nt], "Ngrid");
+  addr[nt] = &params.Ngrid;
+  id[nt++] = INT;
+
   strcpy(paramtag[nt], "AlphaCoefficient");
   addr[nt] = &params.AlphaCoefficient;
   id[nt++] = REAL;
@@ -58,6 +66,14 @@ void read_params(void)
   strcpy(paramtag[nt], "ExternalSources");
   addr[nt] = &params.ExternalSources;
   id[nt++] = INT;
+
+  strcpy(paramtag[nt], "ExternalAccretionStrength");
+  addr[nt] = &params.ExternalAccretionStrength;
+  id[nt++] = REAL;
+  
+  strcpy(paramtag[nt], "ExternalTorqueStrength");
+  addr[nt] = &params.ExternalTorqueStrength;
+  id[nt++] = REAL;
 
   strcpy(paramtag[nt], "Softening");
   addr[nt] = &params.Softening;

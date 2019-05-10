@@ -13,17 +13,12 @@ int main(int argc, char **argv)
   
   read_params();
   
-  int Noutput=40;  
+  int Noutput=50;  
   double t= 0;
 
-  printf("TimeMax=%g\n",params.TimeMax);
-  printf("AlphaCoefficient=%g\n",params.AlphaCoefficient);
-  printf("VerticalAspectRatio=%g\n", params.VerticalAspectRatio);
-  printf("TempProfileIndex=%g\n",params.TempProfileIndex);
-  
-  
-  N = params.TimeMax/dt;
-
+  N = params.TimeMax/params.dt;
+  dt = params.dt;
+  M = params.Ngrid;
   
   struct grid *Grid = init_grid(Grid);
   double *lambda=init_quant(lambda, Grid);
