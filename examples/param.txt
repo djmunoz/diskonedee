@@ -1,0 +1,12 @@
+TimeMax  5.0e4
+dt  300
+Ngrid  500
+AlphaCoefficient  0.06
+VerticalAspectRatio  0.1
+TempProfileIndex  1.0
+InnerBoundaryConditionType  1
+OuterBoundaryConditionType  1
+ExternalSources  1
+ExternalAccretionStrength  0.0
+ExternalTorqueStrength  0.0
+Softening  0
