@@ -1,3 +1,4 @@
+OutputFile output.txt
 TimeMax  5.0e4
 dt  300
 Ngrid  500
@@ -7,6 +8,8 @@ TempProfileIndex  1.0
 InnerBoundaryConditionType  1
 OuterBoundaryConditionType  1
 ExternalSources  1
-ExternalAccretionStrength  0.0
-ExternalTorqueStrength  0.0
+ExternalSourcesRadius  2.8
+ExternalSourcesWidth  0.4
+ExternalAccretionStrength  0.002
+ExternalTorqueStrength  0
 Softening  0

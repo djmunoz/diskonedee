@@ -2,7 +2,7 @@
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>
-
+#include <gsl_sf_erf.h>
 
 #include "disk.h"
 #include "global.h"
@@ -97,10 +97,10 @@ double eval_nu_func(double R)
 {
   double GM = 1.0;
   double nu;
-  if (params.Softening == 0)
-      nu = params.AlphaCoefficient * params.VerticalAspectRatio * params.VerticalAspectRatio * sqrt(GM) * pow(R, 1.5 - params.TempProfileIndex);
-  else
-    nu = params.AlphaCoefficient * params.VerticalAspectRatio * params.VerticalAspectRatio * pow(R, 3 - params.TempProfileIndex) * eval_omega_func(R);
+  //if (params.Softening == 0)
+  nu = params.AlphaCoefficient * params.VerticalAspectRatio * params.VerticalAspectRatio * sqrt(GM) * pow(R, 1.5 - params.TempProfileIndex);
+  //else
+  //  nu = params.AlphaCoefficient * params.VerticalAspectRatio * params.VerticalAspectRatio * pow(R, 3 - params.TempProfileIndex) * eval_omega_func(R);
   
   return nu;
 
@@ -160,21 +160,63 @@ double eval_g_func(double R)
 double blip(double R)
 {
   double R0,w, Omega;
-  R0 = 2.8;
-  w = 0.4;
+  R0 = params.ExternalSourcesRadius;
+  w = params.ExternalSourcesWidth;
+  //R0 = 2.8;
+  //w = 0.4;
   Omega= 1./sqrt(R0)/R0;
   return Omega*exp(-(R-R0)*(R-R0)/2/w/w);
 }
 
+double dirac_comb(double R)
+{
+  double R0,w, Omega;
+  R0 = params.ExternalSourcesRadius;
+  w = params.ExternalSourcesWidth;
+  double spacing = 4 * w;
+  Omega= 1./sqrt(R0)/R0;
+  double source = 0;
+  for (int k = (R0/spacing); k > 0; k--)
+	source+=Omega*exp(-(R- spacing * k)*(R- spacing * k)/2/w/w);
+  return source;
+}
+
+double kernel(double R)
+{
+  double R0,w, Omega;
+  R0 = params.ExternalSourcesRadius;
+  w = params.ExternalSourcesWidth;
+  //R0 = 2.8;
+  //w = 0.4;
+  Omega= 1./sqrt(R0)/R0;
+  return Omega*erfc((R - R0)/w)/2;// * R;
+}
+
+
+
 double eval_beta_func(double R)
 {
-  return params.ExternalTorqueStrength * blip(R);
+  if (params.ExternalSources == 1)
+      return params.ExternalTorqueStrength * blip(R);
+  else if (params.ExternalSources == 2)
+      return params.ExternalTorqueStrength * dirac_comb(R);
+  else if (params.ExternalSources == 3)
+      return params.ExternalTorqueStrength * kernel(R);
+  else
+      return 0;
 }
 
 
 double eval_gamma_func(double R)
 {
-  return params.ExternalAccretionStrength * blip(R);
+  if (params.ExternalSources == 1)
+      return params.ExternalAccretionStrength * blip(R);
+  else if (params.ExternalSources == 2)
+      return params.ExternalAccretionStrength * dirac_comb(R);
+  else if (params.ExternalSources == 3)
+      return params.ExternalAccretionStrength * kernel(R);
+  else
+      return 0;
 }
 
 

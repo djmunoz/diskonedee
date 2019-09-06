@@ -32,7 +32,7 @@ void advance(double * Q,  struct grid *G, double dt);
 void advance_euler(double * Q, struct grid *G, double dt);
 void advance_cranknicolson(double * Q, struct grid *G, double dt);
 
-void read_params(void);
+void read_params(char *in_file);
 void write_header(struct grid *G, FILE *output);
 void write_to_file(double * Q, struct grid *G, FILE *output, double time);
 
@@ -47,3 +47,4 @@ double get_profile(double R);
 double get_profile_powerlaw_truncated(double R);
 double get_profile_powerlaw(double R);
 double get_profile_deltafunc(double R);
+double get_profile_similarity_cavity(double R);

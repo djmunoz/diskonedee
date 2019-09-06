@@ -8,15 +8,15 @@
 #include "global.h"
 
 #define MAXLEN_PARAM_TAG 30
-#define MAXLEN_PARAM_VALUE 30
+#define MAXLEN_PARAM_VALUE 40
 #define MAX_PARAMETERS 20
 #define REAL 1
 #define STRING 2
 #define INT 3
 
-void read_params(void)
+void read_params(char *in_file)
 {
-  char *in_file = "param.txt";
+  //in_file = "param.txt";
 
 
   char paramtag[MAX_PARAMETERS][MAXLEN_PARAM_TAG];
@@ -31,12 +31,25 @@ void read_params(void)
 
   /* Allocate string tags to parameters */
   int nt=0;
+  
+  strcpy(paramtag[nt], "OutputFile");
+  addr[nt] = &params.OutputFile;
+  id[nt++] = STRING;
+
   strcpy(paramtag[nt], "TimeMax");
   addr[nt] = &params.TimeMax;
   id[nt++] = REAL;
 
   strcpy(paramtag[nt], "dt");
   addr[nt] = &params.dt;
+  id[nt++] = REAL;
+  
+  strcpy(paramtag[nt], "Rmin");
+  addr[nt] = &params.Rmin;
+  id[nt++] = REAL;
+  
+  strcpy(paramtag[nt], "Rmax");
+  addr[nt] = &params.Rmax;
   id[nt++] = REAL;
 
   strcpy(paramtag[nt], "Ngrid");
@@ -63,10 +76,22 @@ void read_params(void)
   addr[nt] = &params.OuterBoundaryConditionType;
   id[nt++] = INT;  
 
+  strcpy(paramtag[nt], "InitialProfile");
+  addr[nt] = &params.InitialProfile;
+  id[nt++] = INT;  
+
   strcpy(paramtag[nt], "ExternalSources");
   addr[nt] = &params.ExternalSources;
   id[nt++] = INT;
-
+  
+  strcpy(paramtag[nt], "ExternalSourcesRadius");
+  addr[nt] = &params.ExternalSourcesRadius;
+  id[nt++] = REAL;
+  
+  strcpy(paramtag[nt], "ExternalSourcesWidth");
+  addr[nt] = &params.ExternalSourcesWidth;
+  id[nt++] = REAL;
+  
   strcpy(paramtag[nt], "ExternalAccretionStrength");
   addr[nt] = &params.ExternalAccretionStrength;
   id[nt++] = REAL;
@@ -91,7 +116,7 @@ void read_params(void)
 	  *buf = 0;
 	  fgets(buf, MAXLEN_PARAM_TAG + MAXLEN_PARAM_VALUE + 200, fd);
 
-	  if(sscanf(buf, "%s%s", buf1, buf2, buf3) < 2)
+	  if(sscanf(buf, "%s%s%s", buf1, buf2, buf3) < 2)
 	    continue;
 	  
 	  if(buf1[0] == '%')

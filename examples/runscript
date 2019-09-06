@@ -1,4 +1,4 @@
 make clean -C ../diskonedee/
 make -C ../diskonedee/
-../diskonedee/diskonedee 
+../diskonedee/diskonedee param.txt 
 

@@ -77,7 +77,7 @@ void init_grid_terms(double *Q, struct grid *G)
       G->vals[j].cn_middle_diag = 1. - dt * 0.5 * G->vals[j].B_coeff_val;
       G->vals[j].cn_lower_diag = -dt*0.5 * G->vals[j].C_coeff_val;
 
-      if (params.ExternalSources == 1)
+      if (params.ExternalSources)
 	{
 	  double D_coeff_val, E_coeff_val, F_coeff_val, G_coeff_val;
 	  D_coeff_val = 0.25 * dt * delta_inv * eval_l_func(G->vals[j+1].side_val) /
@@ -178,5 +178,15 @@ void init_boundaries(double *Q, struct grid *G)
 
 double get_profile(double R)
 {
-  return  get_profile_powerlaw_truncated(R);
+  if (params.InitialProfile == 0)
+      return  get_profile_deltafunc(R);
+  else if(params.InitialProfile == 1)
+      return  get_profile_powerlaw(R);
+  else if(params.InitialProfile == 2)
+      return  get_profile_powerlaw_truncated(R);
+  else if(params.InitialProfile == 3)
+      return get_profile_similarity_cavity(R);
+  else
+      return 1;
+
 }

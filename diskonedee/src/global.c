@@ -6,8 +6,10 @@
 int M;
 int N;
 double dt;
-double Rmin = 1.0;
-double Rmax = 100.0;
+double Rmin;
+double Rmax;
 
 struct parameters params;
+
+char ParameterFile[40];
 
