@@ -159,7 +159,7 @@ void read_params(char *in_file)
 	}
       fclose(fd);
       
-      printf("Your parameters are:\n");
+      printf("\nYour parameters are:\n");
       for(int k = 0; k < nt; k++)
 	if(param_handled[k] == 1)
 	  {
@@ -169,9 +169,26 @@ void read_params(char *in_file)
 	      printf("%s=%d\n",paramtag[k],*((int *) addr[k]));
 	    if (id[k] == STRING)
 	      printf("%s=%s\n",paramtag[k],(char *) addr[k]);
-	       
-
 	  }
+
+      printf("\nWARNING: Unspecified parameters\n");
+      int empty = 0;
+      for(int k = 0; k < nt; k++)
+        if(param_handled[k] == 0)
+          {
+            if (id[k] == REAL)
+              printf("%s=%g\n",paramtag[k],*((double *) addr[k]));
+            if (id[k] == INT)
+              printf("%s=%d\n",paramtag[k],*((int *) addr[k]));
+            if (id[k] == STRING)
+              printf("%s=%s\n",paramtag[k],(char *) addr[k]);
+	    empty++;
+          }
+      printf("\n");
+      if (empty)
+	exit(0);
+	
+
       
     }
 
